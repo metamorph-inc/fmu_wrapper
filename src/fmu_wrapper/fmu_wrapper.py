@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from openmdao.api import Component
+import sys
 import os
 import os.path
 import json
@@ -80,7 +81,10 @@ class FmuWrapper(Component):
 
 
 if __name__ == "__main__":
-    fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
+    if len(sys.argv) == 2:
+        fmu_path = sys.argv[1]
+    else:
+        fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
     c = FmuWrapper(fmu_path)
 
     # c.solve_nonlinear({'h': 22.0}, dict(), dict())
