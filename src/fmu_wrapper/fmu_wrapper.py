@@ -1,5 +1,8 @@
 from __future__ import print_function
 
+import matplotlib
+
+matplotlib.use('Agg')
 from openmdao.api import Component
 import os
 import os.path
@@ -8,12 +11,14 @@ from pyfmi import load_fmu
 
 
 def _debug(*args):
-    # print(*args)
+    print(*args)
     pass
 
 
 class FmuWrapper(Component):
     """ An FMU Wrapper """
+
+    DEFAULT_FINAL_TIME = 10
 
     def __init__(self, fmuPath):
         super(FmuWrapper, self).__init__()
@@ -31,6 +36,11 @@ class FmuWrapper(Component):
         self.variable_name_map_mdao_to_fmu = dict()
         self.variable_name_map_fmu_to_mdao = dict()
 
+        # Add 'final_time' as a parameter
+        self.add_param("final_time", val=self.DEFAULT_FINAL_TIME)
+        _debug("param:", "final_time")
+
+        # Add parameters and unknowns discovered from FMU
         for variable_name, v in variables.iteritems():
             description = fmu_model.get_variable_description(variable_name)
             data_type = fmu_model.get_variable_data_type(variable_name)
@@ -63,17 +73,24 @@ class FmuWrapper(Component):
         fmu_model = self.fmu_model
         # fmu_model.initialize()
 
+        final_time = self._params_dict['final_time']['val']
         for param_name, param_value in params.iteritems():
-            param_fmu_name = self.variable_name_map_mdao_to_fmu[param_name]
-            fmu_model.set(param_fmu_name, param_value)
+            if param_name is "final_time":
+                final_time = float(str(param_value))
+            else:
+                param_fmu_name = self.variable_name_map_mdao_to_fmu[param_name]
+                fmu_model.set(param_fmu_name, param_value)
 
-        res = fmu_model.simulate()
+        res = fmu_model.simulate(final_time=final_time)
 
-        result_dict = dict()
+        for fmi_out_name, index in res.result_data.name_lookup.iteritems():
+            if fmi_out_name not in self.variable_name_map_fmu_to_mdao:
+                # We aren't tracking this. Move on.
+                continue
 
-        for output_name, output_val in unknowns.iteritems():
-            output_fmu_name = self.variable_name_map_mdao_to_fmu[output_name]
-            # output_val = fmu_model
+            mdao_out_name = self.variable_name_map_fmu_to_mdao[fmi_out_name]
+            unknowns[mdao_out_name] = res.final(fmi_out_name)
+
 
     def jacobian(self, params, unknowns, resids):
         raise Exception('unsupported')
@@ -83,5 +100,8 @@ if __name__ == "__main__":
     fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
     c = FmuWrapper(fmu_path)
 
-    # c.solve_nonlinear({'h': 22.0}, dict(), dict())
-    print(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
+    _debug(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
+
+    unknowns = dict()
+    c.solve_nonlinear({'h': 22.0}, unknowns, None)
+    _debug(json.dumps(unknowns, indent=2))
