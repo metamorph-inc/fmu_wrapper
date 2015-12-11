@@ -33,8 +33,10 @@ class FmuWrapper(Component):
         self.fmu_model = fmu_model
         variables = fmu_model.get_model_variables()
 
-        self.variable_name_map_mdao_to_fmu = dict()
-        self.variable_name_map_fmu_to_mdao = dict()
+        self.param_name_map_mdao_to_fmu = dict()
+        self.param_name_map_fmu_to_mdao = dict()
+        self.output_name_map_fmu_to_mdao = dict()
+        self.output_name_map_mdao_to_fmu = dict()
 
         # Add 'final_time' as a parameter
         self.add_param("final_time", val=self.DEFAULT_FINAL_TIME)
@@ -57,17 +59,40 @@ class FmuWrapper(Component):
             _debug('\tcausality:', causality_names[causality])
 
             variable_safe_name = variable_name.replace('(', '_').replace(')', '_')
-            self.variable_name_map_mdao_to_fmu[variable_safe_name] = variable_name
-            self.variable_name_map_fmu_to_mdao[variable_name] = variable_safe_name
 
-            if causality == 0 or variability == 1:
-                # It's a parameter
-                self.add_param(variable_safe_name, val=nom)
-                _debug("param:", variable_safe_name)
+            is_param = False
+            is_output = False
+            if causality == 0:
+                is_param = True
+            elif causality == 1:
+                is_output = True
             else:
-                # It's an output or state variable
+                # Causality 2 (INTERNAL) or 3 (NONE)
+                is_output = True
+                if variability != 0:
+                    # PARAMETER, CONTINUOUS, DISCRETE
+                    is_param = True
+
+            if is_param:
+                if is_output:
+                    # Need a unique name to avoid collision
+                    pname = variable_safe_name + "_initial_value"
+                else:
+                    pname = variable_safe_name
+
+                self.param_name_map_mdao_to_fmu[pname] = variable_name
+                self.param_name_map_fmu_to_mdao[variable_name] = pname
+
+                self.add_param(pname, val=nom)
+                _debug("param:", variable_safe_name)
+
+            if is_output:
+                self.output_name_map_mdao_to_fmu[variable_safe_name] = variable_name
+                self.output_name_map_fmu_to_mdao[variable_name] = variable_safe_name
+
                 self.add_output(variable_safe_name, val=nom)
                 _debug("output:", variable_safe_name)
+
 
     def solve_nonlinear(self, params, unknowns, resids):
         fmu_model = self.fmu_model
@@ -78,17 +103,17 @@ class FmuWrapper(Component):
             if param_name is "final_time":
                 final_time = float(str(param_value))
             else:
-                param_fmu_name = self.variable_name_map_mdao_to_fmu[param_name]
+                param_fmu_name = self.param_name_map_mdao_to_fmu[param_name]
                 fmu_model.set(param_fmu_name, param_value)
 
         res = fmu_model.simulate(final_time=final_time)
 
         for fmi_out_name, index in res.result_data.name_lookup.iteritems():
-            if fmi_out_name not in self.variable_name_map_fmu_to_mdao:
+            if fmi_out_name not in self.output_name_map_fmu_to_mdao:
                 # We aren't tracking this. Move on.
                 continue
 
-            mdao_out_name = self.variable_name_map_fmu_to_mdao[fmi_out_name]
+            mdao_out_name = self.output_name_map_fmu_to_mdao[fmi_out_name]
             unknowns[mdao_out_name] = res.final(fmi_out_name)
 
 
@@ -103,5 +128,5 @@ if __name__ == "__main__":
     _debug(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
 
     unknowns = dict()
-    c.solve_nonlinear({'h': 22.0}, unknowns, None)
+    c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
     _debug(json.dumps(unknowns, indent=2))
