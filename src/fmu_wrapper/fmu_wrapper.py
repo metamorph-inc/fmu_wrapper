@@ -31,7 +31,6 @@ class FmuWrapper(Component):
         causality_names = ['Input', 'Output', 'Internal', 'None']
 
         fmu_model = load_fmu(fmuPath)
-        self.fmu_model = fmu_model
         variables = fmu_model.get_model_variables()
 
         self.param_name_map_mdao_to_fmu = dict()
@@ -93,7 +92,7 @@ class FmuWrapper(Component):
                 _debug("output:", variable_safe_name)
 
     def solve_nonlinear(self, params, unknowns, resids):
-        fmu_model = self.fmu_model
+        fmu_model = load_fmu(self.fmuPath)
         # fmu_model.initialize()
 
         final_time = self._params_dict['final_time']['val']
