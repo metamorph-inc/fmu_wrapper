@@ -8,12 +8,13 @@ These instructions were created from https://pypi.python.org/pypi/PyFMI
 Download:  
 FMILibrary-2.0.1-win32.zip from http://www.jmodelica.org/FMILibrary  
 Assimulo-2.8.win32-py2.7.exe from https://pypi.python.org/pypi/Assimulo  
+numpy, scpipy from http://www.lfd.uci.edu/~gohlke/pythonlibs/  
 %userprofile%\Documents\OpenMDAO
 
     python -m virtualenv --system-site-packages fmu_venv
     fmu_venv\scripts\activate
-    pip install -i https://pypi.metamorphsoftware.com/ numpy
-    pip install -i https://pypi.metamorphsoftware.com/ scipy
+    pip install %userprofile%\Downloads\numpy-1.10.1+mkl-cp27-none-win32.whl
+    pip install %userprofile%\Downloads\scipy-0.16.1-cp27-none-win32.whl
     pip install -i https://pypi.metamorphsoftware.com/ lxml
     "\Program Files\7-Zip\7z.exe" x -y "%userprofile%\Downloads\FMILibrary-2.0.1-win32.zip"
     set FMIL_HOME=%CD%\FMILibrary-2.0.1-win32\
