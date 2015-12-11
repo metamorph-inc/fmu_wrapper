@@ -1,8 +1,15 @@
+from __future__ import print_function
+
 from openmdao.api import Component
 import os
 import os.path
 import json
 from pyfmi import load_fmu
+
+
+def _debug(*args):
+    # print(*args)
+    pass
 
 
 class FmuWrapper(Component):
@@ -33,11 +40,11 @@ class FmuWrapper(Component):
             variability = fmu_model.get_variable_variability(variable_name)
             causality = fmu_model.get_variable_causality(variable_name)
 
-            print variable_name + ':', description
-            print '\tdata_type:', data_type_names[data_type]
-            print '\tmin/nom/max:', min, nom, max
-            print '\tvariability:', variability_names[variability]
-            print '\tcausality:', causality_names[causality]
+            _debug(variable_name + ':', description)
+            _debug('\tdata_type:', data_type_names[data_type])
+            _debug('\tmin/nom/max:', min, nom, max)
+            _debug('\tvariability:', variability_names[variability])
+            _debug('\tcausality:', causality_names[causality])
 
             variable_safe_name = variable_name.replace('(', '_').replace(')', '_')
             self.variable_name_map_mdao_to_fmu[variable_safe_name] = variable_name
@@ -46,11 +53,11 @@ class FmuWrapper(Component):
             if causality == 0 or variability == 1:
                 # It's a parameter
                 self.add_param(variable_safe_name, val=nom)
-                print "param:", variable_safe_name
+                _debug("param:", variable_safe_name)
             else:
                 # It's an output or state variable
                 self.add_output(variable_safe_name, val=nom)
-                print "output:", variable_safe_name
+                _debug("output:", variable_safe_name)
 
     def solve_nonlinear(self, params, unknowns, resids):
         fmu_model = self.fmu_model
@@ -73,8 +80,8 @@ class FmuWrapper(Component):
 
 
 if __name__ == "__main__":
-    print "hi"
     fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
     c = FmuWrapper(fmu_path)
 
-    c.solve_nonlinear({'h': 22.0}, dict(), dict())
+    # c.solve_nonlinear({'h': 22.0}, dict(), dict())
+    print(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
