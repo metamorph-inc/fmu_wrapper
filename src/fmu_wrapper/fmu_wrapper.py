@@ -68,10 +68,8 @@ class FmuWrapper(Component):
                 is_output = True
             else:
                 # Causality 2 (INTERNAL) or 3 (NONE)
+                is_param = True
                 is_output = True
-                if variability != 0:
-                    # PARAMETER, CONTINUOUS, DISCRETE
-                    is_param = True
 
             if is_param:
                 if is_output:
