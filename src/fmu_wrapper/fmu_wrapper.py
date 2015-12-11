@@ -1,10 +1,7 @@
 from openmdao.api import Component
 import os
+import os.path
 import json
-import matplotlib
-
-matplotlib.use('Agg')
-import pyfmi
 from pyfmi import load_fmu
 
 
@@ -55,10 +52,9 @@ class FmuWrapper(Component):
                 self.add_output(variable_safe_name, val=nom)
                 print "output:", variable_safe_name
 
-
     def solve_nonlinear(self, params, unknowns, resids):
         fmu_model = self.fmu_model
-        #fmu_model.initialize()
+        # fmu_model.initialize()
 
         for param_name, param_value in params.iteritems():
             param_fmu_name = self.variable_name_map_mdao_to_fmu[param_name]
@@ -68,20 +64,17 @@ class FmuWrapper(Component):
 
         result_dict = dict()
 
-
         for output_name, output_val in unknowns.iteritems():
             output_fmu_name = self.variable_name_map_mdao_to_fmu[output_name]
-            #output_val = fmu_model
-
+            # output_val = fmu_model
 
     def jacobian(self, params, unknowns, resids):
         raise Exception('unsupported')
 
-    
+
 if __name__ == "__main__":
     print "hi"
-    fmu_path = '/Users/adam/repos/mdaolab/venv/lib/python2.7/site-packages/pyfmi/examples/files/FMUs/ME1.0/bouncingBall.fmu'
+    fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
     c = FmuWrapper(fmu_path)
 
     c.solve_nonlinear({'h': 22.0}, dict(), dict())
-
