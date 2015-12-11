@@ -28,5 +28,6 @@ numpy, scpipy from http://www.lfd.uci.edu/~gohlke/pythonlibs/
     python src\fmu_wrapper\fmu_wrapper.py
 
     TODO: virtualenv doesn't need --system-site-packages if:
-    echo c:\Python27\lib\site-packages > C:\Users\kevin\Documents\fmu_wrapper\fmu_venv\Lib\site-packages\assimulo.pth
+    echo c:\Python27\lib\site-packages > fmu_venv\Lib\site-packages\assimulo.pth
     TODO: remove it from sys.path ? import assimulo; import sys; sys.path.remove(r'c:\Python27\lib\site-packages')
+    TODO: try assimulo from http://www.lfd.uci.edu/~gohlke/pythonlibs/

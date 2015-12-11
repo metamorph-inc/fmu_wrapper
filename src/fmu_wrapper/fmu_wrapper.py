@@ -12,7 +12,7 @@ from pyfmi import load_fmu
 
 
 def _debug(*args):
-    print(*args)
+    # print(*args)
     pass
 
 
@@ -92,18 +92,20 @@ class FmuWrapper(Component):
                 self.add_output(variable_safe_name, val=nom)
                 _debug("output:", variable_safe_name)
 
-
     def solve_nonlinear(self, params, unknowns, resids):
         fmu_model = self.fmu_model
         # fmu_model.initialize()
 
         final_time = self._params_dict['final_time']['val']
         for param_name, param_value in params.iteritems():
-            if param_name is "final_time":
-                final_time = float(str(param_value))
+            val = param_value['val']
+            if param_value.get('pass_by_obj', False):
+                val = val.val
+            if param_name == "final_time":
+                final_time = float(str(val))
             else:
                 param_fmu_name = self.param_name_map_mdao_to_fmu[param_name]
-                fmu_model.set(param_fmu_name, param_value)
+                fmu_model.set(param_fmu_name, val)
 
         res = fmu_model.simulate(final_time=final_time)
 
@@ -114,7 +116,6 @@ class FmuWrapper(Component):
 
             mdao_out_name = self.output_name_map_fmu_to_mdao[fmi_out_name]
             unknowns[mdao_out_name] = res.final(fmi_out_name)
-
 
     def jacobian(self, params, unknowns, resids):
         raise Exception('unsupported')
@@ -127,8 +128,8 @@ if __name__ == "__main__":
         fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
     c = FmuWrapper(fmu_path)
 
-    _debug(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
+    print(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
 
-    unknowns = dict()
-    c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
-    _debug(json.dumps(unknowns, indent=2))
+    # unknowns = dict()
+    # c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
+    # _debug(json.dumps(unknowns, indent=2))
