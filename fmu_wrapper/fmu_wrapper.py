@@ -121,14 +121,6 @@ class FmuWrapper(Component):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2:
-        fmu_path = sys.argv[1]
-    else:
-        fmu_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test/bouncingBall.fmu')
-    c = FmuWrapper(fmu_path)
-
-    print(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
-
-    # unknowns = dict()
-    # c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
-    # _debug(json.dumps(unknowns, indent=2))
+    unknowns = dict()
+    c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
+    print(json.dumps(unknowns, indent=2))
