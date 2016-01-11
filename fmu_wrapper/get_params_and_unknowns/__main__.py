@@ -7,4 +7,4 @@ if __name__ == "__main__":
     fmu_path = sys.argv[1]
     c = FmuWrapper(fmu_path)
 
-    print(json.dumps({'params': c._params_dict, 'unknowns': c._unknowns_dict}))
+    print(json.dumps({'params': c._init_params_dict, 'unknowns': c._init_unknowns_dict}))
