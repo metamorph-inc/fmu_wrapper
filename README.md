@@ -1,6 +1,8 @@
 # fmu_wrapper
 An FMU wrapper for OpenMDAO 1.x
 
+**NOTE: Very early-stage prototype, not yet ready for serious use.**
+Suggestions and contributors are welcome.
 
 #### Windows setup (Python 2.7):
 
