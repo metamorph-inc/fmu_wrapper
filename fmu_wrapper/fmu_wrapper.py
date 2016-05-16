@@ -58,7 +58,9 @@ class FmuWrapper(Component):
             _debug('\tvariability:', variability_names[variability])
             _debug('\tcausality:', causality_names[causality])
 
-            variable_safe_name = variable_name.replace('(', '_').replace(')', '_')
+            variable_safe_name = variable_name
+            for char in '()[].':
+                variable_safe_name = variable_safe_name.replace(char, '_')
 
             is_param = False
             is_output = False
