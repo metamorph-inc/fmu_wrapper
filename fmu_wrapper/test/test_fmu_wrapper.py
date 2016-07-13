@@ -1,33 +1,29 @@
 import unittest
+import os.path
+from openmdao.api import Problem, Group, IndepVarComp
+from fmu_wrapper.fmu_wrapper import FmuWrapper
+
+_this_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class FmuWrapperTestCase(unittest.TestCase):
-
-    def setUp(self):
-        pass
-        
-    def tearDown(self):
-        pass
-        
     def test_FmuWrapper(self):
         prob = Problem()
         root = prob.root = Group()
-        # excelFile = r"excel_wrapper_test.xlsx"
-        # xmlFile = r"excel_wrapper_test.xml"
-        # jsonFile = r"testjson_1.json"
-        # root.add('ew', ExcelWrapper(excelFile, jsonFile,True),promotes=['*'])
-        # prob.setup()
-        # prob.run()
-        #
-        # self.assertEqual((2.1* float(prob['x'])),prob['y'],"Excel Wrapper failed for FLoat values")
-        # self.assertEqual((bool(prob['b'])),prob['bout'],"Excel Wrapper failed for Boolean Values")
-        # self.assertEqual(prob['s'].lower(),prob['sout'],"Excel Wrapper failed for String values")
-        # self.assertEqual(float(prob['sheet1_in'])+100,prob['sheet2_out'],"Excel wrapper fails in multiple sheets")
+        root.add('fmu', FmuWrapper(os.path.join(_this_dir, 'bouncingBall.fmu')), promotes=['*'])
+        root.add('c', IndepVarComp('nine', 9.0))
+        root.add('final_time', IndepVarComp('ten', 10))
+        root.connect('final_time.ten', 'final_time')
+        root.connect('c.nine', 'der_v__initial_value')
+        root.connect('c.nine', 'e_initial_value')
+        root.connect('c.nine', 'g_initial_value')
+        root.connect('c.nine', 'h_initial_value')
+        root.connect('c.nine', 'v_initial_value')
+        root.connect('c.nine', 'der_h__initial_value')
+        prob.setup()
+        prob.run()
+        self.assertAlmostEqual(0.53169023, prob['h'])
 
 
-
-
-
-        
 if __name__ == "__main__":
     unittest.main()

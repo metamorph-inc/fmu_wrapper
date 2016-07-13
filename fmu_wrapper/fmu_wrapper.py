@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 from openmdao.api import Component
-import json
 from pyfmi import load_fmu
 
 
@@ -114,9 +113,3 @@ class FmuWrapper(Component):
 
     def jacobian(self, params, unknowns, resids):
         raise Exception('unsupported')
-
-
-if __name__ == "__main__":
-    unknowns = dict()
-    c.solve_nonlinear({'h_initial_value': 12.0, 'final_time': 5}, unknowns, None)
-    print(json.dumps(unknowns, indent=2))
