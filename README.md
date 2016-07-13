@@ -6,12 +6,6 @@ Suggestions and contributors are welcome.
 
 #### Windows setup (Python 2.7):
 
-These instructions were created from https://pypi.python.org/pypi/PyFMI  
-Download:  
-FMILibrary-2.0.1-win32.zip from http://www.jmodelica.org/FMILibrary  
-numpy, scpipy, Assimulo-2.8-cp27-none-win32.whl from http://www.lfd.uci.edu/~gohlke/pythonlibs/  
-%userprofile%\Documents\OpenMDAO
-
     python -m virtualenv fmu_venv
     fmu_venv\scripts\activate
     pip install %userprofile%\Downloads\numpy-1.10.1+mkl-cp27-none-win32.whl

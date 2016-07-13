@@ -1,12 +1,6 @@
 from __future__ import print_function
 
-import matplotlib
-
-matplotlib.use('Agg')
 from openmdao.api import Component
-import sys
-import os
-import os.path
 import json
 from pyfmi import load_fmu
 
@@ -97,13 +91,13 @@ class FmuWrapper(Component):
         fmu_model = load_fmu(self.fmuPath)
         # fmu_model.initialize()
 
-        final_time = self._params_dict['final_time']['val']
+        final_time = self._init_params_dict['final_time']['val']
         for param_name, param_value in params.iteritems():
             val = param_value['val']
             if param_value.get('pass_by_obj', False):
-                val = val.val
+                val = val
             if param_name == "final_time":
-                final_time = float(str(val))
+                final_time = float(val)
             else:
                 param_fmu_name = self.param_name_map_mdao_to_fmu[param_name]
                 fmu_model.set(param_fmu_name, val)

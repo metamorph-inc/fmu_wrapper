@@ -1,0 +1,14 @@
+--index-url https://pypi.metamorphsoftware.com/
+--extra-index-url https://pypi.python.org/simple
+
+numpy==1.11.1; sys_platform == 'win32'
+scipy==0.17.1; sys_platform == 'win32'
+
+openmdao==1.7.0
+
+PyFMI==2.3.1
+Cython==0.24
+lxml==3.6.0
+pylab==0.1.3
+# Assimulo==2.9
+# pip install --index-url https://pypi.metamorphsoftware.com/ Assimulo==2.9
