@@ -1,0 +1,15 @@
+build: false
+
+cache:
+  - '%LOCALAPPDATA%\pip\cache -> requirements.txt'
+
+install:
+  - python -m pip install --upgrade virtualenv==15.0.2
+  - python -m virtualenv venv
+  - venv\scripts\activate
+  - pip install -r requirements.txt
+  - pip install --index-url https://pypi.metamorphsoftware.com/ Assimulo==2.9
+  - pip install nose
+
+test_script:
+  - nosetests
