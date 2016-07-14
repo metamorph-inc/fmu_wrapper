@@ -90,11 +90,9 @@ class FmuWrapper(Component):
         fmu_model = load_fmu(self.fmuPath)
         # fmu_model.initialize()
 
-        final_time = self._init_params_dict['final_time']['val']
+        final_time = float(self._init_params_dict['final_time']['val'])
         for param_name, param_value in params.iteritems():
-            val = param_value['val']
-            if param_value.get('pass_by_obj', False):
-                val = val
+            val = params[param_name]
             if param_name == "final_time":
                 final_time = float(val)
             else:

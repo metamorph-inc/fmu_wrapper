@@ -22,7 +22,7 @@ class FmuWrapperTestCase(unittest.TestCase):
         root.connect('c.nine', 'der_h__initial_value')
         prob.setup()
         prob.run()
-        self.assertAlmostEqual(0.53169023, prob['h'])
+        self.assertAlmostEqual(781.8893182, prob['h'])
 
 
 if __name__ == "__main__":
