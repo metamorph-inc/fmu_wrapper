@@ -1,5 +1,3 @@
-build: false
-
 cache:
   - '%LOCALAPPDATA%\pip\cache -> requirements.txt'
 
@@ -8,6 +6,12 @@ install:
   - python -m virtualenv venv
   - venv\scripts\activate
   - pip install -r requirements.txt
+
+build_script:
+  - '.\venv\Scripts\python setup.py bdist_wheel'
+
+artifacts:
+  - path: 'dist\*.whl'
 
 test_script:
   - nosetests
