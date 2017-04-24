@@ -11,6 +11,4 @@ Suggestions and contributors are welcome.
     python -m virtualenv fmu_venv
     fmu_venv\scripts\activate
     pip install -r requirements.txt
-    pip install --index-url https://pypi.metamorphsoftware.com/ Assimulo==2.9
-    pip install nose
     nosetests

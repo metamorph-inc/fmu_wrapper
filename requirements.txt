@@ -1,14 +1,15 @@
 --index-url https://pypi.metamorphsoftware.com/
 --extra-index-url https://pypi.python.org/simple
+numpy==1.12.1; sys_platform == 'win32'
+scipy==0.19.0; sys_platform == 'win32'
+lxml==3.7.3
 
-numpy==1.11.1; sys_platform == 'win32'
-scipy==0.17.1; sys_platform == 'win32'
+coverage==4.3.4
+nose==1.3.7
+openmdao==1.7.3
 
-openmdao==1.7.0
+# "import pylab" comes from:
+matplotlib==2.0.0
+pyfmi==2.3.1
+Assimulo==2.9
 
-PyFMI==2.3.1
-Cython==0.24
-lxml==3.6.0
-pylab==0.1.3
-# Assimulo==2.9
-# pip install --index-url https://pypi.metamorphsoftware.com/ Assimulo==2.9
