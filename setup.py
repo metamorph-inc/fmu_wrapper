@@ -8,7 +8,7 @@ kwargs = {'author': 'Adam Nagel',
           'download_url': '',
           'entry_points': '[openmdao.component]\nfmu_wrapper.FmuWrapper=fmu_wrapper:FmuWrapper\n\n[openmdao.container]\nfmu_wrapper.FmuWrapper=fmu_wrapper:FmuWrapper',
           'include_package_data': True,
-          'install_requires': ['openmdao'],
+          'install_requires': ['openmdao', 'pyfmi', 'Assimulo'],
           'keywords': ['openmdao, fmu'],
           'license': 'GNU General Public License, version 2',
           'maintainer': 'Adam Nagel',
@@ -18,7 +18,7 @@ kwargs = {'author': 'Adam Nagel',
           'package_dir': {'fmu_wrapper': 'fmu_wrapper'},
           'package_data': {'fmu_wrapper.test': ['test/bouncingBall.fmu']},
           'url': 'https://github.com/metamorph-inc/fmu_wrapper',
-          'version': '0.1',
+          'version': '0.2',
           'zip_safe': False}
 
 setup(**kwargs)
