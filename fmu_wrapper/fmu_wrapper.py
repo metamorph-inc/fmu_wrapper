@@ -1,7 +1,9 @@
 from __future__ import print_function
+from __future__ import absolute_import
 
 from openmdao.api import Component
 from pyfmi import load_fmu
+import six
 
 
 def _debug(*args):
@@ -36,7 +38,7 @@ class FmuWrapper(Component):
         _debug("param:", "final_time")
 
         # Add parameters and unknowns discovered from FMU
-        for variable_name, v in variables.iteritems():
+        for variable_name, v in six.iteritems(variables):
             description = fmu_model.get_variable_description(variable_name)
             data_type = fmu_model.get_variable_data_type(variable_name)
             min = fmu_model.get_variable_min(variable_name)
@@ -101,7 +103,7 @@ class FmuWrapper(Component):
 
         res = fmu_model.simulate(final_time=final_time)
 
-        for fmi_out_name, index in res.result_data.name_lookup.iteritems():
+        for fmi_out_name, index in six.iteritems(res.result_data.name_lookup):
             if fmi_out_name not in self.output_name_map_fmu_to_mdao:
                 # We aren't tracking this. Move on.
                 continue
