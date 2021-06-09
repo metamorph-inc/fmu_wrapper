@@ -19,6 +19,10 @@ kwargs = {'author': 'Adam Nagel',
           'package_data': {'fmu_wrapper.test': ['test/bouncingBall.fmu']},
           'url': 'https://github.com/metamorph-inc/fmu_wrapper',
           'version': '0.4',
-          'zip_safe': False}
+          'zip_safe': False,
+          'project_urls': {
+              'Source': 'https://github.com/metamorph-inc/fmu_wrapper',
+          },
+          }
 
 setup(**kwargs)
