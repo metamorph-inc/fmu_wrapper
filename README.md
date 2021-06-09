@@ -1,5 +1,5 @@
 # fmu_wrapper
-[![Build status](https://ci.appveyor.com/api/projects/status/dys2woikuo5fstio/branch/master?svg=true)](https://ci.appveyor.com/project/ksmyth/fmu-wrapper/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/usce9x897xurq3oa?svg=true)](https://ci.appveyor.com/project/Metamorph/fmu-wrapper/)
 
 An FMU wrapper for OpenMDAO 1.x
 
