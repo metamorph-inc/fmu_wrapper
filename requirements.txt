@@ -1,7 +1,7 @@
 --index-url https://pypi.metamorphsoftware.com/
 --extra-index-url https://pypi.python.org/simple
 numpy==1.12.1; sys_platform == 'win32'
-scipy==0.19.0; sys_platform == 'win32'
+scipy==1.10.0; sys_platform == 'win32'
 lxml==4.6.2
 
 coverage==4.3.4
